@@ -1,660 +1,306 @@
 ---
-# You can also start simply with 'default'
-theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
-background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
+# 表紙
+title: "ディープラーニングの技術基礎"
+subtitle: "データ変換の「層」を組み合わせて表現学習を実現する"
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# apply unocss classes to the current slide
-class: text-center
-# https://sli.dev/features/drawing
-drawings:
-  persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
-transition: slide-left
-# enable MDC Syntax: https://sli.dev/features/mdc
-mdc: true
-# open graph
-# seoMeta:
-#  ogImage: https://cover.sli.dev
+  発表時間: 約20分
+  対象範囲: テキスト 第3章 セクション1〜4
 ---
 
-# Welcome to Slidev
+# 本日のテーマ
 
-Presentation slides for developers
+**ディープラーニングはなぜ高い性能を発揮できるのか？**
 
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
+その根幹にある **「表現学習」**という考え方と、それを実現する**ニューラルネットワーク**の基本的な仕組みについて解説します。
+
+1.  **表現学習**: なぜ「表現」が重要なのか？
+2.  **ディープラーニングの基礎**: ニューラルネットワークとは何か？
+3.  **モデルの構造**: ニューラルネットワークはどのように作られているか？
+4.  **モデルの学習**: ニューラルネットワークはどのように学ぶのか？
+
+---
+layout: section
+---
+
+# 1. 表現学習
+
+### 「表現」の重要性と難題
+
+---
+
+## 機械学習における最重要課題
+
+機械学習の性能は **「対象の情報をいかに表現するか」** で大きく決まります。
+
+- **良い表現**:
+  - 後続タスクに必要な情報を保持している
+  - 後続タスクが扱いやすい形になっている
+
+- **悪い表現**:
+  - 重要な情報が失われ、後続タスクが解けなくなる
+
+<br>
+<div class="bg-gray-300 p-4 rounded text-black">
+<b>例：</b>一枚の画像を「野球バットを持った少年」という文章で表現すると、「バットをどちらの手で持っているか」という情報は失われてしまいます。
 </div>
 
-<div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
-    <carbon:logo-github />
-  </a>
-</div>
+---
 
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
+## 従来の表現方法とその限界
+
+従来、データ表現は専門家が知識に基づいて設計（特徴設計）していました。
+
+- **文書**: **BoW (Bag of Words)**
+  - 単語の出現頻度などで文書をベクトル表現。
+  - **課題**: 語順、文脈、単語間の類似性が失われる。
+  - 例：「私はきつねうどんが好きだ」と「私はうどんが好きなきつねだ」が同じ表現になる。
+
+- **画像**: **BoVW (Bag of Visual Words)**
+  - 画像内の局所的な特徴（SIFTなど）の集合で表現。
+  - **課題**: 特徴間の位置関係が失われる。
+  - 例：「馬の上に人が乗っている」と「人の上に馬が乗っている」が区別できない。
 
 ---
 
-## transition: fade-out
+## ディープラーニングのブレークスルー：表現学習
 
-# What is Slidev?
+**表現学習 (Representation Learning)** とは、データの「表現方法」自体を、データから自動で学習するアプローチです。
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
+<br>
 
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-  <br>
-  <br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
-
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
-</style>
-
-<!--
-Here is another comment.
--->
-
----
-
-transition: slide-up
-level: 2
-
----
-
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
-
-## Keyboard Shortcuts
-
-|                                                    |                             |
-| -------------------------------------------------- | --------------------------- |
-| <kbd>right</kbd> / <kbd>space</kbd>                | next animation or slide     |
-| <kbd>left</kbd> / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd>                                      | previous slide              |
-| <kbd>down</kbd>                                    | next slide                  |
-
-<!-- https://sli.dev/guide/animations.html#click-animation -->
-
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-
-layout: two-cols
-layoutClass: gap-16
-
----
-
-# Table of contents
-
-You can use the `Toc` component to generate a table of contents for your slides:
-
-```html
-<Toc minDepth="1" maxDepth="1" />
-```
-
-The title will be inferred from your slide content, or you can override it with `title` and `level` in your frontmatter.
-
-::right::
-
-<Toc text-sm minDepth="1" maxDepth="2" />
-
----
-
-layout: image-right
-image: https://cover.sli.dev
-
----
-
-# Code
-
-Use code snippets and get the highlighting directly, and even types hover!
-
-```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-import { computed, ref } from "vue";
-
-const count = ref(0);
-const doubled = computed(() => count.value * 2);
-
-doubled.value = 2;
-```
-
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="342" color="#953" width="2" arrowSize="1" />
-
-<!-- This allow you to embed external code blocks -->
-
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
-<!--
-Notes can also sync with clicks
-
-[click] This will be highlighted after the first click
-
-[click] Highlighted with `count = ref(0)`
-
-[click:3] Last click (skip two clicks)
--->
-
----
-
-## level: 2
-
-# Shiki Magic Move
-
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
-
-````md magic-move {lines: true}
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: "John Doe",
-  books: [
-    "Vue 2 - Advanced Guide",
-    "Vue 3 - Basic Guide",
-    "Vue 4 - The Mystery",
-  ],
-});
-```
-
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: "John Doe",
-        books: [
-          "Vue 2 - Advanced Guide",
-          "Vue 3 - Basic Guide",
-          "Vue 4 - The Mystery",
-        ],
-      },
-    };
-  },
-};
-```
-
-```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: "John Doe",
-      books: [
-        "Vue 2 - Advanced Guide",
-        "Vue 3 - Basic Guide",
-        "Vue 4 - The Mystery",
-      ],
-    },
-  }),
-};
-```
-
-Non-code blocks are ignored.
-
-```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: "John Doe",
-  books: [
-    "Vue 2 - Advanced Guide",
-    "Vue 3 - Basic Guide",
-    "Vue 4 - The Mystery",
-  ],
-};
-</script>
-```
-````
-
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
+<div class="grid grid-cols-2 gap-4">
 <div>
+<h3 class="text-lg">従来の機械学習</h3>
+<div class="p-3 border rounded">
 
-You can use Vue components directly inside your slides.
+専門家が **特徴表現を設計**
 
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
+</div>
 </div>
 <div>
+<h3 class="text-lg">ディープラーニング</h3>
+<div class="p-3 border rounded">
 
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
+データから**表現方法を学習**
 
 </div>
 </div>
-
-<!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
--->
-
----
-
-## class: px-20
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/guide/theme-addon#use-theme) and
-check out the [Awesome Themes Gallery](https://sli.dev/resources/theme-gallery).
-
----
-
-# Clicks Animations
-
-You can add `v-click` to elements to add a click animation.
-
-<div v-click>
-
-This shows up when you click the slide:
-
-```html
-<div v-click>This shows up when you click the slide.</div>
-```
-
 </div>
 
 <br>
 
-<v-click>
+**「ディープラーニングは表現学習を実現しているから高性能である」** といっても過言ではありません。
 
-The <span v-mark.red="3"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="4">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
+---
+layout: section
+---
+# 2. ディープラーニングの基礎知識
 
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
+### ニューラルネットワークとは何か？
 
-</v-click>
+---
 
-<div mt-20 v-click>
+## ディープラーニングの正体
 
-[Learn more](https://sli.dev/guide/animations#click-animation)
+ディープラーニングとは、**層数が多く、幅が広いニューラルネットワーク**を利用した機械学習の手法です。
 
+<div class="grid grid-cols-2 gap-8 mt-4 text-center">
+<div>
+<h3 class="font-bold">従来のニューラルネットワーク</h3>
+<img src="https://i.imgur.com/vH1N57I.png" class="h-40 mx-auto" alt="Shallow Neural Network">
+<ul class="text-sm text-left list-disc pl-6">
+<li>層数: ~3層</li>
+<li>幅: 10~1000ユニット</li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold">ディープラーニング</h3>
+<img src="https://i.imgur.com/eBczw5W.png" class="h-40 mx-auto" alt="Deep Neural Network">
+<ul class="text-sm text-left list-disc pl-6">
+<li>層数: 10~1000層以上</li>
+<li>幅: 100~100万ユニット以上</li>
+</ul>
+</div>
+</div>
+
+- **着想**: 脳の神経回路網（ニューロンとシナプス）からヒントを得ています。
+
+---
+
+## ニューラルネットワークの本質
+
+ニューラルネットワークは **「合成関数のオバケ」** のようなものです
+
+- **単純な関数**を大量に組み合わせることで、**複雑な関数**を表現します。
+- 各関数は**パラメータ**を持っており、これを変えることで挙動を調整できます。
+- **万能近似定理**:
+  - ニューラルネットワークは、中間層の幅（組み合わせる関数の数）が十分にあれば、**任意の関数を任意の精度で近似できる**ことが証明されています。
+
+---
+layout: section
+---
+
+# 3. ニューラルネットワークのモデル
+
+### どのように作られているか？
+
+---
+
+## モデルの基本要素：層 (Layer)
+
+ニューラルネットワークは、 **「層 (Layer)」** と呼ばれる計算単位を何層にも重ねて作られます。
+
+1つの層は、主に2つの処理から構成されます。
+
+1.  **線形変換**: 入力に対して重みを掛けて足し合わせる処理。- `総結合層`、`畳み込み層`など
+
+2.  **活性化関数**: 線形変換の結果を非線形に変換する処理。- `ReLU`、`シグモイド関数`など
+<br>
+<div class="p-4 bg-gray-300 rounded text-center text-black">
+<b>入力</b> &rarr; [ <b>線形変換 (接続層)</b> ] &rarr; [ <b>非線形変換 (活性化関数)</b> ] &rarr; <b>出力</b>
 </div>
 
 ---
 
-# Motions
+## なぜ「非線形」が重要なのか？
 
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
+**線形変換だけを何度重ねても、表現力は向上しません**。
 
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }"
-  :click-3="{ x: 80 }"
-  :leave="{ x: 1000 }"
->
-  Slidev
-</div>
-```
-
-<div class="w-60 relative">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 30, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn more](https://sli.dev/guide/animations.html#motion)
-
-</div>
-
----
-
-# LaTeX
-
-LaTeX is supported out-of-box. Powered by [KaTeX](https://katex.org/).
-
-<div h-3 />
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-
-$$
-{1|3|all}
-\begin{aligned}
-\nabla \cdot \vec{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \vec{B} &= 0 \\
-\nabla \times \vec{E} &= -\frac{\partial\vec{B}}{\partial t} \\
-\nabla \times \vec{B} &= \mu_0\vec{J} + \mu_0\varepsilon_0\frac{\partial\vec{E}}{\partial t}
-\end{aligned}
-$$
-
-[Learn more](https://sli.dev/features/latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-Learn more: [Mermaid Diagrams](https://sli.dev/features/mermaid) and [PlantUML Diagrams](https://sli.dev/features/plantuml)
-
----
-
-foo: bar
-dragPos:
-square: 691,32,167,\_,-16
-
----
-
-# Draggable Elements
-
-Double-click on the draggable elements to edit their positions.
+- なぜなら、線形変換の重ね合わせは、結局1つの大きな線形変換で表現できてしまうためです。
+  $$ y = \mathbf{v}^T(\mathbf{W}^T\mathbf{x} + \mathbf{b}) + c \quad \Rightarrow \quad y = \mathbf{u}^T\mathbf{x} + d $$
 
 <br>
 
-###### Directive Usage
+線形変換の間に **「非線形の活性化関数」** を挟むことで、初めて層を重ねる意味が生まれます。
 
-```md
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-```
+- これにより、モデルは直線や平面では表現できない、複雑で非線形な関係性を捉えることができるようになります。
+
+---
+
+## 多層ネットワークの構造
+
+ディープラーニングでは、この「層」を何段にも積み重ねます。
+
+<div class="text-center my-4">
+<p class="text-sm">入力層</p>
+<div class="i-carbon:arrow-down text-xl mx-auto"></div>
+<div class="border-2 rounded pt-2">
+層 1:
+
+$$ \mathbf{h}^{[1]} = f_a(\mathbf{W}^{[1]T}\mathbf{x} + \mathbf{b}^{[1]}) $$
+
+</div>
+
+<div class="i-carbon:arrow-down text-xl mx-auto"></div>
+<div class="border-2 rounded pt-2">
+層 2:
+
+$$ \mathbf{h}^{[2]} = f_a(\mathbf{W}^{[2]T}\mathbf{h}^{[1]} + \mathbf{b}^{[2]}) $$
+
+</div>
+<div class="i-carbon:arrow-down text-xl mx-auto"></div>
+<p class="text-sm">...</p>
+<div class="i-carbon:arrow-down text-xl mx-auto"></div>
+<p class="text-sm">出力層</p>
+</div>
+
+- 前の層の出力が、次の層の入力となります。
+- 入力に近い層を**「下の層」**、出力に近い層を**「上の層」**と呼びます。
+
+---
+
+## ニューラルネットワークの様々な側面
+
+同じモデルでも、異なる視点から捉えることができます。
+
+- **関数として**:
+  - パラメータ $\theta$ で特徴づけられた、入力 $\mathbf{x}$ から出力 $\mathbf{y}$ への巨大な関数 $y=f(\mathbf{x}; \theta)$。
+
+- **神経回路網として**:
+  - **ニューロン**（値を持つノード）と、それらを繋ぐ重み付きの**シナプス**（接続）からなるネットワーク。脳科学の用語が使われます
+
+- **計算グラフとして**:
+  - 計算の流れをノード（演算）とエッジ（データ）で表現した有向グラフ。
+  - 分岐、合流、パラメータ共有など、複雑な構造を柔軟に設計できます。
+
+---
+layout: section
+---
+# 4. ニューラルネットワークの学習
+
+### どのように学ぶのか？
+
+---
+
+## 学習の目標とプロセス
+
+ニューラルネットワークの学習とは、 **「望ましい出力を得られるように、パラメータを自動で調整すること」** です。
+
+この学習は、多くの機械学習手法と同様に **「最適化問題」** として定式化されます。
+
+1.  **目的関数 $L(\theta)$ の設定**:
+    - モデルの予測と正解の「間違い度合い」を計算する関数（損失関数）を定義します。
+    - 例: 訓練データ全体での間違いの平均（訓練誤差）。
+
+2.  **最適化**:
+    - 目的関数 $L(\theta)$ の値が最小になるようなパラメータ $\theta^*$ を探します。
+
+$$ \theta^* = \arg\min\_{\theta} L(\theta) $$
+
+---
+
+## どうやって最適なパラメータを探すか？
+
+ニューラルネットワークのパラメータは数万〜数億個にもなり、目的関数の形は非常に複雑です。
+
+- **単純な戦略とその問題点**:
+  - **1つずつ修正**: パラメータ数がm個の場合、計算量が $O(m^2)$ となり非現実的。
+  - **ランダムにまとめて修正**: 高次元空間では、改善する方向を偶然見つけられる確率はほぼゼロ。
 
 <br>
-
-###### Component Usage
-
-```md
-<v-drag text-3xl>
-  <div class="i-carbon:arrow-up" />
-  Use the `v-drag` component to have a draggable container!
-</v-drag>
-```
-
-<v-drag pos="663,206,261,_,-15">
-  <div text-center text-3xl border border-main rounded>
-    Double-click me!
-  </div>
-</v-drag>
-
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-
-###### Draggable Arrow
-
-```md
-<v-drag-arrow two-way />
-```
-
-<v-drag-arrow pos="67,452,253,46" two-way op70 />
+<div class="p-4 bg-gray-300 rounded text-black">
+<b>課題:</b> パラメータ数が多くても、効率的に「改善する方向」を見つける方法が必要。
+</div>
 
 ---
 
-src: ./pages/imported-slides.md
-hide: false
+## 勾配降下法による最適化
+
+そこで使われるのが**勾配降下法 (Gradient Descent)** です。
+
+- **勾配 (Gradient)**:
+  - 各パラメータに関する目的関数の**傾き**をまとめたベクトル。
+  - 目的関数の値が**最も急激に増加する方向**を示します。
+
+- **勾配降下法**:
+  - 現在のパラメータ位置における勾配を計算する。
+  - 勾配と**逆の方向**にパラメータを少しだけ更新する。
+  - このステップを、目的関数の値が十分に小さくなるまで繰り返す。
+
+<br>
+<div class="text-center">
+<img src="https://i.imgur.com/uNf4b23.png" class="h-48 mx-auto" alt="Gradient Descent Visualization">
+<p class="text-sm">山の斜面で、最も傾きが急な下り方向に少しずつ進んでいくイメージ。</p>
+</div>
 
 ---
 
----
+# まとめと次のステップ
 
-# Monaco Editor
+- **表現学習**:
+  - ディープラーニングは、データから最適な**表現方法を学習する**ことで高い性能を実現します。
 
-Slidev provides built-in Monaco Editor support.
+- **ニューラルネットワークのモデル**:
+  - **「線形変換」** と **「非線形な活性化関数」** からなる **「層」** を何段にも重ねて作られます。
 
-Add `{monaco}` to the code block to turn it into an editor:
+- **ニューラルネットワークの学習**:
+  - 学習は**最適化問題**として扱われ、**勾配降下法**を用いてパラメータを更新します。
 
-```ts {monaco}
-import { ref } from "vue";
-import { emptyArray } from "./external";
+<br>
+<hr>
+<br>
 
-const arr = ref(emptyArray(10));
-```
+**次の疑問：**
+では、数億個ものパラメータを持つ複雑な関数の **「勾配」** は、どのようにして効率的に計算するのでしょうか？
 
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-import { version } from "vue";
-import { emptyArray, sayHello } from "./external";
-
-sayHello();
-console.log(`vue ${version}`);
-console.log(
-  emptyArray<number>(10).reduce(
-    (fib) => [...fib, fib.at(-1)! + fib.at(-2)!],
-    [1, 1]
-  )
-);
-```
-
----
-
-layout: center
-class: text-center
-
----
-
-# Learn More
-
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
-
-<PoweredBySlidev mt-10 />
+&rarr; **次章： 誤差逆伝播法**
