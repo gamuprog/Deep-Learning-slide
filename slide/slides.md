@@ -66,6 +66,10 @@ layout: section
 
 ---
 
+<img src="/assets/1/4.png" class="h-120 mx-auto" alt="BoW">
+
+---
+
 ## ディープラーニングのブレークスルー：表現学習
 
 **表現学習 (Representation Learning)** :データの「表現方法」自体を、データから自動で学習するアプローチ
@@ -280,6 +284,9 @@ layout: section
 
 そこで使われるのが**勾配降下法 (Gradient Descent)**
 
+<div class="grid grid-cols-3 gap-2 mt-4">
+<div class="col-span-2">
+
 - **勾配 (Gradient)**:
   - 各パラメータに関する目的関数の**傾き**をまとめたベクトル
   - 目的関数の値が**最も急激に増加する方向**を示す
@@ -289,6 +296,11 @@ layout: section
   - 勾配と**逆の方向**にパラメータを少しだけ更新する
   - このステップを、目的関数の値が十分に小さくなるまで繰り返す
 
+</div>
+<div>
+<img src="/assets/1/3.png" class="h-60 mx-auto" alt="gradient">
+</div>
+</div>
 ---
 
 # まとめと次のステップ
