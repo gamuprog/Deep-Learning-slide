@@ -83,6 +83,12 @@ VAEは、以下のステップで新しいデータを生成する。
 
 -----
 
+## データ生成のプロセス
+
+<img src="/assets/3/1.png" class="mt-8 h-100 mx-auto" alt="VAE-1">
+
+-----
+
 ## 学習の全体像
 
 学習時は、**符号化器**と**復号化器**の両方を使って、入力と出力が似るように学習する。
@@ -101,6 +107,12 @@ VAEは、以下のステップで新しいデータを生成する。
 <div class="p-2 text-sm bg-gray-300 rounded text-black text-center">
 最終的に、入力<b>x</b>と復元<b>x'</b>の差 (誤差) が小さくなるように、両方のネットワークのパラメータを更新していく。
 </div>
+
+-----
+
+## 学習の全体像
+
+<img src="/assets/3/2.png" class="mt-8 h-100 mx-auto" alt="VAE-2">
 
 ---
 layout: section
